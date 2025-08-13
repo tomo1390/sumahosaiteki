@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>条件分岐アンケート</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { 
+      font-family: sans-serif; 
+      padding: 2em;
+      text-align: center;
+      margin: 0;
+    }
+
+    h2 {
+      font-size: 1.5em;
+      margin-bottom: 1em;
+    }
+
+    .stars {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: center;
+      gap: 0.3em; /* 星の間隔を調整 */
+      margin-bottom: 1.5em;
+      flex-wrap: nowrap;
+    }
+
+    .stars input {
+      display: none;
+    }
+
+    .stars label {
+      color: lightgray;
+      cursor: pointer;
+      transition: color 0.2s;
+      user-select: none;
+      font-size: clamp(2em, 10vw, 3em); /* 画面幅に応じて自動調整 */
+    }
+
+    .stars input:checked ~ label,
+    .stars label:hover,
+    .stars label:hover ~ label {
+      color: gold;
+    }
+
+    /* 送信ボタン */
+    button {
+      font-size: clamp(1em, 5vw, 1.5em); /* 画面幅に応じて自動調整 */
+      padding: clamp(0.6em, 2vw, 1em) clamp(1.5em, 5vw, 2em);
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    /* 余白の調整（小さい画面用） */
+    @media (max-width: 400px) {
+      body {
+        padding: 1em;
+      }
+      h2 {
+        font-size: 1.2em;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>このサービスを5段階で評価してください</h2>
+
+  <form id="ratingForm" 
+        data-high-url="https://g.page/your-business/review" 
+        data-low-url="https://forms.gle/N1sWY3H71vMdccXF9">
+    <div class="stars">
+      <input type="radio" name="rating" id="star5" value="5"><label for="star5">★</label>
+      <input type="radio" name="rating" id="star4" value="4"><label for="star4">★</label>
+      <input type="radio" name="rating" id="star3" value="3"><label for="star3">★</label>
+      <input type="radio" name="rating" id="star2" value="2"><label for="star2">★</label>
+      <input type="radio" name="rating" id="star1" value="1"><label for="star1">★</label>
+    </div>
+
+    <button type="submit">送信</button>
+  </form>
+
+  <script>
+    const form = document.getElementById("ratingForm");
+    const googleReviewURL = form.dataset.highUrl;
+    const lowRatingFormURL = form.dataset.lowUrl;
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const rating = document.querySelector('input[name="rating"]:checked');
+      if (!rating) {
+        alert("評価を選択してください");
+        return;
+      }
+      const value = parseInt(rating.value);
+      if (value >= 4) {
+        window.location.href = googleReviewURL;
+      } else {
+        const feedback = confirm("ご意見をお聞かせください。フィードバックフォームに移動しますか？");
+        if (feedback) window.location.href = lowRatingFormURL;
+      }
+    });
+  </script>
+
+</body>
+</html>
